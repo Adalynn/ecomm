@@ -47,7 +47,7 @@ function getUserDataByFbId($fbid) {
 		$res = mysql_query($sql);
 		$num = mysql_num_rows($res);
 		if($num) {
-			$row = mysql_fetch_array($res);
+			$row = mysql_fetch_assoc($res);
 			$data['data'] = $row;
 			$data['response_code'] = 503;
 			$data['message'] = "user fb id exists in db";
