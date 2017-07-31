@@ -40,6 +40,8 @@ function getUserDbId($fbid) {
 
 
 function getUserDataByFbId($fbid) {
+
+	sleep(1);
 	$conn = dbConn();
 	$data = array();
 	if ($conn) {
@@ -62,5 +64,30 @@ function getUserDataByFbId($fbid) {
 	return $data;
 }
 
+function getUserDataByDbId($dbid) {
+
+	sleep(1);
+	$conn = dbConn();
+	$data = array();
+	if ($conn) {
+		$sql = "SELECT * FROM users where `id` = '" . $dbid . "'";
+		$res = mysql_query($sql);
+		$num = mysql_num_rows($res);
+		if($num) {
+			$row = mysql_fetch_assoc($res);
+			$data['data'] = $row;
+			$data['response_code'] = 504;
+			$data['message'] = "user db id exists in db";
+		} else {
+			$data['response_code'] = 505;
+			$data['data'] = $dbid;
+			$data['message'] = "user db id does not exists in db";
+		}
+	} else {
+			$data['response_code'] = 500;
+			$data['message'] = "unable to connect db";
+	}
+	return $data;
+}
 
 ?>
