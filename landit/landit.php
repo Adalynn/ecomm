@@ -36,5 +36,38 @@ if(isset($_REQUEST['action'])) {
 		//$user_data = getUserDataByFbId($_REQUEST['fbid']);	
 		echo json_encode($_REQUEST);	
 	}
+
+	/*
+	 * update user fbid in db on behalf of dbid and prev fbid
+	*/
+	if($_REQUEST['action'] == "saveuserdatabyfbid") {
+		$user_data = saveUserDataByFbId($_REQUEST['fbid']);	
+		echo json_encode($user_data);	
+	}
+
+	/*
+	 * update user dbid,fbi,email,mobile in db on behalf of dbid
+	*/
+	if($_REQUEST['action'] == "saveuserdatabydbid") {
+		$user_data = saveUserDataByDbId($_REQUEST);	
+		echo json_encode($user_data);	
+	}
+
+	/*
+	 * get user contact lists in db on behalf of dbid
+	*/
+	if($_REQUEST['action'] == "getusercontactsbydbid") {
+		$user_data = getUserContactsByDbId($_REQUEST);
+		echo json_encode($user_data);
+	}
+
+	/*
+	 * get user contact lists in db on behalf of dbid
+	*/
+	if($_REQUEST['action'] == "addcontacts") {
+		$user_contact_data = addUserContacts($_REQUEST);
+		echo json_encode($user_contact_data);
+	}
+	
 }
 ?>
