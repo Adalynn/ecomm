@@ -68,6 +68,15 @@ if(isset($_REQUEST['action'])) {
 		$user_contact_data = addUserContacts($_REQUEST);
 		echo json_encode($user_contact_data);
 	}
+
+	/*
+	 * get user contact lists in db on behalf of dbid
+	*/
+	if($_REQUEST['action'] == "updateisverified") {
+		$user_contact_data = updateIsVerified($_REQUEST);
+		echo json_encode($user_contact_data);
+	}
+
 	
 }
 ?>

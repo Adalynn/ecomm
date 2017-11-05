@@ -27,12 +27,31 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fbid` text NOT NULL,
   `email` varchar(255) NOT NULL,
-  `mobile` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+  `mobile` varchar(255) NOT NULL,
+  `added_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+--
+-- Table structure for table `contacts`
+--
+
+CREATE TABLE `contacts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `contact_name` varchar(255) NOT NULL,
+  `contact_number` varchar(15) NOT NULL,
+  `parent_id` int(11) NOT NULL,
+  `is_verified` int(11) NOT NULL DEFAULT '0',
+  `added_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `other_info` text NOT NULL,
+  `latitude` varchar(255) NOT NULL DEFAULT '0',
+  `longitude` varchar(255) NOT NULL DEFAULT '0',
+  `verification_code` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1

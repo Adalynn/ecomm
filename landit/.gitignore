@@ -1,0 +1,2 @@
+## Ignoring Env Specific Functions like db connection etc
+env_functions.php

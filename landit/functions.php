@@ -1,6 +1,6 @@
 <?php
-
-function dbConn() {
+include "env_functions.php";
+function dbConnOld() {
 	$host="localhost";
 	$user="root";
 	$password="root";
@@ -117,6 +117,34 @@ function getUserDataByDbId($dbid) {
 }
 
 
+function updateIsVerified($r_data) {
+	sleep(1);
+	$conn = dbConn();
+	$data = array();
+	if ($conn) {
+
+		$sql="UPDATE contacts set is_verified=1 where `id`='" . $r_data['cid'] . "' AND `parent_id`='" . $r_data['pid'] . "'";
+		$res = mysql_query($sql);
+		if($res) {
+			$data['data'] = $r_data;
+			$data['response_code'] = 512;
+			$data['user_updated'] = true;
+			$data['message'] = "verification code updated successfully!";
+		} else {
+			$data['data'] = $r_data;
+			$data['response_code'] = 512;
+			$data['user_updated'] = false;
+			$data['message'] = "unable to update verification code!";
+		}
+
+	} else {
+		$data['response_code'] = 500;
+		$data['message'] = "unable to connect db";
+	}
+
+	return $data;
+}
+
 function saveUserDataByDbId($r_data) {
 
 	sleep(1);
@@ -171,6 +199,7 @@ function getUserContactsByDbId($r_data) {
                 $user_contact['latitude'] = $row['latitude'];
                 $user_contact['longitude'] = $row['longitude'];
                 $user_contact['other_info'] = $row['other_info'];
+                $user_contact['verification_code'] = $row['verification_code'];
                 array_push($user_contacts, $user_contact);
             }
             $data['data'] = $user_contacts;
@@ -212,6 +241,7 @@ function addUserContacts($r_data) {
 			$row = mysql_fetch_assoc($res);
 			$data['contact_id'] = $row['id'];
         	$data['contact_added'] = false;
+            $data['contact_number'] = $r_data['contact_number'];
             $data['response_code'] = 510;
             $data['message'] = "user contacts already exists";
             $data['verification_code'] = 0;
@@ -224,12 +254,14 @@ function addUserContacts($r_data) {
 				$dbid = mysql_insert_id();
 				$data['contact_id'] = $dbid;				
 				$data['contact_added'] = true;
+            	$data['contact_number'] = $r_data['contact_number'];
 				$data['response_code'] = 511;
 				$data['message'] = "user contacts added";
 				$data['verification_code'] = $verification_code;
 			} else {
 				$data['contact_id'] = 0;
 				$data['contact_added'] = false;
+            	$data['contact_number'] = $r_data['contact_number'];
 				$data['response_code'] = 501;
 				$data['message'] = "user inserted in db query error";
 				$data['verification_code'] = 0;		
