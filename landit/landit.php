@@ -93,5 +93,13 @@ if(isset($_REQUEST['action'])) {
 		$verficationcode_data = getVerificationCode();
 		echo json_encode($verficationcode_data);
 	}
+
+	/*
+	 * get user contact lists in db on behalf of dbid
+	*/
+	if($_REQUEST['action'] == "update_user_isverified") {
+		$user_contact_data = updateUsersIsVerified($_REQUEST);
+		echo json_encode($user_contact_data);
+	}
 }
 ?>

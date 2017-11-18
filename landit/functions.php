@@ -201,6 +201,35 @@ function getUserDataByDbId($dbid) {
 }
 
 
+
+function updateUsersIsVerified($r_data) {
+	sleep(1);
+	$conn = dbConn();
+	$data = array();
+	if ($conn) {
+
+		$sql="UPDATE contacts set is_verified=1 where `id`='" . $r_data['dbid'] . "' AND `mobile`='" . $r_data['mobile'] . "'";
+		$res = mysql_query($sql);
+		if($res) {
+			$data['data'] = $r_data;
+			$data['response_code'] = 512;
+			$data['user_updated'] = true;
+			$data['message'] = "verification code updated successfully!";
+		} else {
+			$data['data'] = $r_data;
+			$data['response_code'] = 512;
+			$data['user_updated'] = false;
+			$data['message'] = "unable to update verification code!";
+		}
+
+	} else {
+		$data['response_code'] = 500;
+		$data['message'] = "unable to connect db";
+	}
+
+	return $data;
+}
+
 function updateIsVerified($r_data) {
 	sleep(1);
 	$conn = dbConn();
