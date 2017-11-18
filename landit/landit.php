@@ -77,6 +77,13 @@ if(isset($_REQUEST['action'])) {
 		echo json_encode($user_contact_data);
 	}
 
+	/*
+	 * Add new user in db
+	*/
+	if($_REQUEST['action'] == "addnewuser") {
+		$add_new_user_data = addNewUser($_REQUEST);
+		echo json_encode($add_new_user_data);
+	}
 	
 }
 ?>

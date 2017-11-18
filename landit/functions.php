@@ -14,6 +14,90 @@ function dbConnOld() {
 	}
 }
 
+function getUserData($by_col, $value) {
+
+	$conn = dbConn();
+	$data = array();
+	if ($conn) {
+		$sql = "SELECT * FROM users where `".$by_col."` = '" . $value . "'";
+		$res = mysql_query($sql);
+		$num = mysql_num_rows($res);
+		if($num) {
+			$data['data'] = mysql_fetch_array($res);
+			$data['user_exists'] = true;
+			$data['response_code'] = 501;
+			$data['message'] = "user mobile already registered";
+		} else {
+			$data['data'] = array();
+			$data['user_exists'] = false;
+			$data['response_code'] = 502;
+			$data['message'] = "user mobile not registered";
+		}
+	} else {
+		$data['response_code'] = 500;
+		$data['message'] = "unable to connect db";
+	}
+
+	return $data;
+
+}
+
+function addNewUser($r_data) {
+
+	$conn = dbConn();
+	$data = array();
+	
+	if ($conn) {
+		$mobile = $r_data['mobile'];
+
+		$user_data = getUserData("mobile", $mobile);
+		if($user_data['user_exists']) {
+			/*
+				Don't enter just update the is_verified and add the verification code
+			*/
+			$userid = $user_data['data']['id'];
+			$sql="UPDATE users set is_verified=0, verification_code='".getVerificationCode($r_data)."' where `id`='" . $userid . "'";
+			$res = mysql_query($sql);
+			if($res) {
+				$data = getUserDataByDbId($userid);
+				$data['user_updated'] = true;
+				$data['user_exists'] = $user_data['user_exists'];
+			} else {
+				$data['user_id'] = $userid;
+				$data['getUserDataByDbId'] = false;
+				$data['response_code'] = 501;
+				$data['user_exists'] = $user_data['user_exists'];
+				$data['message'] = "user update in db query error";
+			}
+		} else {
+			$sql = "INSERT INTO users (`fbid`,`email`,`verification_code`,`mobile`) VALUES ('','','','".$mobile."')";
+			$res = mysql_query($sql);
+			if ($res) {
+				$data = getUserDataByDbId(mysql_insert_id());
+				$data['user_inserted'] = true;
+				$data['user_exists'] = $user_data['user_exists'];
+			} else {
+				$data['user_id'] = 0;
+				$data['user_inserted'] = false;
+				$data['response_code'] = 501;
+				$data['user_exists'] = $user_data['user_exists'];
+				$data['message'] = "user inserted in db query error";			
+			}
+		}
+
+	} else {
+		$data['response_code'] = 500;
+		$data['message'] = "unable to connect db";
+	}
+
+	return $data;
+}
+
+
+
+
+
+
 function saveUserDataByFbId($fbid) {
 	//#fec225
 	$conn = dbConn();
@@ -224,7 +308,8 @@ function getUserContactsByDbId($r_data) {
 function getVerificationCode($r_data) {
 
 	$unique_str = $r_data['dbid']."#".$r_data['contact_number'];
-	return md5($unique_str);
+	return 1234;
+	//return md5($unique_str);
 }
 
 function addUserContacts($r_data) {
