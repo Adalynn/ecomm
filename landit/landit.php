@@ -85,5 +85,13 @@ if(isset($_REQUEST['action'])) {
 		echo json_encode($add_new_user_data);
 	}
 	
+
+	/*
+	 * Add new user in db
+	*/
+	if($_REQUEST['action'] == "getverficationcode") {
+		$verficationcode_data = getVerificationCode();
+		echo json_encode($verficationcode_data);
+	}
 }
 ?>

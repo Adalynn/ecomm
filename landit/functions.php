@@ -56,7 +56,7 @@ function addNewUser($r_data) {
 				Don't enter just update the is_verified and add the verification code
 			*/
 			$userid = $user_data['data']['id'];
-			$sql="UPDATE users set is_verified=0, verification_code='".getVerificationCode($r_data)."' where `id`='" . $userid . "'";
+			$sql="UPDATE users set is_verified=0, verification_code='".getVerificationCode()."' where `id`='" . $userid . "'";
 			$res = mysql_query($sql);
 			if($res) {
 				$data = getUserDataByDbId($userid);
@@ -70,7 +70,7 @@ function addNewUser($r_data) {
 				$data['message'] = "user update in db query error";
 			}
 		} else {
-			$sql = "INSERT INTO users (`fbid`,`email`,`verification_code`,`mobile`) VALUES ('','','','".$mobile."')";
+			$sql = "INSERT INTO users (`fbid`,`email`,`verification_code`,`mobile`) VALUES ('','','".getVerificationCode()."','".$mobile."')";
 			$res = mysql_query($sql);
 			if ($res) {
 				$data = getUserDataByDbId(mysql_insert_id());
@@ -305,12 +305,45 @@ function getUserContactsByDbId($r_data) {
     return $data;
 }
 
-function getVerificationCode($r_data) {
+function getVerificationCode() {
 
-	$unique_str = $r_data['dbid']."#".$r_data['contact_number'];
-	return 1234;
+	$conn = dbConn();
+
+	$unique_users_codes = getDistictVerificationCodes('users', 'verification_code');
+	$unique_contacts_codes = getDistictVerificationCodes('contacts', 'verification_code');
+
+	$reserved_codes = array_unique(array_merge($unique_users_codes,$unique_contacts_codes));
+
+	return createVerificationCode($reserved_codes, 4);
+	
+
 	//return md5($unique_str);
 }
+
+function createVerificationCode($ignored_values, $digits) {
+
+	$random_code = rand(pow(10, $digits-1), pow(10, $digits)-1);
+	if(!in_array($random_code, $ignored_values)) {
+		return $random_code;
+	} else {
+		createVerificationCode($ignored_values, $digits);
+	}
+}
+
+function getDistictVerificationCodes($table , $field) {
+
+	$conn = dbConn();
+	$unique_codes = array();
+	$sql="SELECT DISTINCT(`".$field."`) FROM `".$table."`";
+    $res = mysql_query($sql);
+    while($row = mysql_fetch_assoc($res)) {
+		if(!empty($row['verification_code'])) {
+		       	array_push($unique_codes, $row['verification_code']);        		        			
+		}
+    }
+    return $unique_codes;
+}
+
 
 function addUserContacts($r_data) {
 
@@ -332,7 +365,7 @@ function addUserContacts($r_data) {
             $data['verification_code'] = 0;
         } else {
         	// User does not exists we can insert now
-        	$verification_code = getVerificationCode($r_data);
+        	$verification_code = getVerificationCode();
 			$sql = "INSERT INTO contacts (`parent_id`,`contact_number`,`contact_name`,`other_info`,`verification_code`) VALUES ('".$r_data['dbid']."','".$r_data['contact_number']."','".$r_data['contact_name']."','','".$verification_code."')";
 			$res = mysql_query($sql);
 			if ($res) {
