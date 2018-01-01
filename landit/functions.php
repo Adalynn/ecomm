@@ -182,7 +182,8 @@ function getUserContactsByDbId($r_data) {
     if ($conn) {
 
         //$sql="UPDATE users set email='".$r_data['email']."',mobile='".$r_data['mobile']."' where `id`='" . $r_data['dbid'] . "'";
-        $sql="SELECT * FROM contacts where `parent_id`='" . $r_data['dbid'] . "'";
+        //$sql="SELECT * FROM contacts where `parent_id`='" . $r_data['dbid'] . "'";
+        $sql="SELECT * FROM contacts where `parent_id`='" . $r_data['dbid'] . "' order by id desc";
         $res = mysql_query($sql);
         $num = mysql_num_rows($res);
         if($num) {
