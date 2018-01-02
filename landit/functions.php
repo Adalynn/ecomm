@@ -208,10 +208,10 @@ function updateUsersIsVerified($r_data) {
 	$data = array();
 	if ($conn) {
 
-		$sql="UPDATE contacts set is_verified=1 where `id`='" . $r_data['dbid'] . "' AND `mobile`='" . $r_data['mobile'] . "'";
+		$sql="UPDATE users set is_verified=1 where `id`='" . $r_data['dbid'] . "' AND `mobile`='" . $r_data['mobile'] . "'";
 		$res = mysql_query($sql);
 		if($res) {
-			$data['data'] = $r_data;
+			$data['data'] = getUserDataByDbId($r_data['dbid'])['data'];
 			$data['response_code'] = 512;
 			$data['user_updated'] = true;
 			$data['message'] = "verification code updated successfully!";
