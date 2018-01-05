@@ -95,6 +95,36 @@ function addNewUser($r_data) {
 
 
 
+function getContactsCount($r_data) {
+
+	$conn = dbConn();
+	$data = array();
+	
+	if ($conn) {
+		$dbid = $r_data['dbid'];
+
+		$sql = "SELECT COUNT(1) as total FROM  contacts where `parent_id` = ".$dbid;
+		$res = mysql_query($sql);
+		if ($res) {
+			$dbid = mysql_insert_id();
+			$row = mysql_fetch_assoc($res);
+			$data['users_contact_count'] = $row['total'];
+			$data['response_code'] = 502;
+			$data['message'] = "user contact count returned";			
+		} else {
+			$data['users_contact_count'] = 0;
+			$data['response_code'] = 501;
+			$data['message'] = "unable to find user count";			
+		}
+
+	} else {
+		$data['response_code'] = 500;
+		$data['message'] = "unable to connect db";
+	}
+	sleep(1);
+	return $data;
+}
+
 
 
 

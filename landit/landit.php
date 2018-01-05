@@ -101,5 +101,14 @@ if(isset($_REQUEST['action'])) {
 		$user_contact_data = updateUsersIsVerified($_REQUEST);
 		echo json_encode($user_contact_data);
 	}
+
+	/*
+	 * get user contact lists in db on behalf of dbid
+	*/
+	if($_REQUEST['action'] == "getcontactscount") {
+		$user_contacts_count_data = getContactsCount($_REQUEST);
+		echo json_encode($user_contacts_count_data);
+	}
+	
 }
 ?>
