@@ -125,8 +125,32 @@ function getContactsCount($r_data) {
 	return $data;
 }
 
+function removeContact($r_data) {
+	sleep(1);
+	$conn = dbConn();
+	$data = array();
+	if ($conn) {
+		$sql="UPDATE contacts set is_verified=2 where `id`='" . $r_data['contact_id'] . "' AND `parent_id`='" . $r_data['parent_id'] . "'";
+		$res = mysql_query($sql);
+		if($res) {
+			$data['data'] = $r_data;
+			$data['response_code'] = 524;
+			$data['user_updated'] = true;
+			$data['message'] = "contact removed successfully!";
+		} else {
+			$data['data'] = $r_data;
+			$data['response_code'] = 523;
+			$data['user_updated'] = false;
+			$data['message'] = "unable to remove contact!";
+		}
 
+	} else {
+		$data['response_code'] = 500;
+		$data['message'] = "unable to connect db";
+	}
 
+	return $data;
+}
 
 function saveUserDataByFbId($fbid) {
 	//#fec225

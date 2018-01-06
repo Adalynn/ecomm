@@ -109,6 +109,14 @@ if(isset($_REQUEST['action'])) {
 		$user_contacts_count_data = getContactsCount($_REQUEST);
 		echo json_encode($user_contacts_count_data);
 	}
+
+	/*
+	 * remove contact from c
+	*/
+	if($_REQUEST['action'] == "removecontact") {
+		$removed_contact_data = removeContact($_REQUEST);
+		echo json_encode($removed_contact_data);
+	}
 	
 }
 ?>
