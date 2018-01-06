@@ -350,7 +350,7 @@ function getUserContactsByDbId($r_data) {
 
         //$sql="UPDATE users set email='".$r_data['email']."',mobile='".$r_data['mobile']."' where `id`='" . $r_data['dbid'] . "'";
         //$sql="SELECT * FROM contacts where `parent_id`='" . $r_data['dbid'] . "'";
-        $sql="SELECT * FROM contacts where `parent_id`='" . $r_data['dbid'] . "' order by id desc";
+        $sql="SELECT * FROM contacts where `parent_id`='" . $r_data['dbid'] . "' AND is_verified IN(0,1) order by id desc";
         $res = mysql_query($sql);
         $num = mysql_num_rows($res);
         if($num) {
