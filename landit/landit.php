@@ -117,6 +117,15 @@ if(isset($_REQUEST['action'])) {
 		$removed_contact_data = removeContact($_REQUEST);
 		echo json_encode($removed_contact_data);
 	}
+
+	/*
+	 * remove lat lan of the given number
+	*/
+	if($_REQUEST['action'] == "updatecordinates") {
+		$updated_contact_data = updateCordinates($_REQUEST);
+		echo json_encode($updated_contact_data);
+	}
+	 
 	
 }
 ?>

@@ -478,4 +478,46 @@ function addUserContacts($r_data) {
     return $data;
 }
 
+
+function updateCordinates($r_data) {
+
+    sleep(1);
+
+    $conn = dbConn();
+    $data = array();
+    $dbId = $r_data['dbid'];
+	$user_data = getUserData("id", $dbId);
+
+	if ($conn) {
+
+		if($user_data['user_exists']) {
+			//Array ( [action] => updatecordinates [longitude] => 55.08500000000001 [latitude] => 89.427 [dbid] => 19 )
+			$sql="UPDATE contacts set longitude='".$r_data['longitude']."', latitude='".$r_data['latitude']."' where `contact_number`='" . $user_data['data']['mobile'] . "' AND is_verified=1";
+			$res = mysql_query($sql);
+			if($res) {
+				$data['data'] = $r_data;
+				$data['response_code'] = 524;
+				$data['location_updated'] = true;
+				$data['message'] = "location updated successfully!";
+			} else {
+				$data['data'] = $r_data;
+				$data['response_code'] = 523;
+				$data['location_updated'] = false;
+				$data['message'] = "unable to update location!";
+			}
+
+		} else {
+			$data['data'] = $r_data;
+			$data['location_updated'] = false;
+			$data['response_code'] = 501;
+			$data['user_exists'] = $user_data['user_exists'];
+			$data['message'] = "No user found in db with dbid" . $dbId;
+		}			
+    } else {
+        $data['response_code'] = 500;
+        $data['message'] = "unable to connect db";
+    }
+    return $data;
+}
+
 ?>
